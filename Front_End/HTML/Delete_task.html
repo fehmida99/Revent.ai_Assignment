@@ -34,7 +34,7 @@
             }
 
             $.ajax({
-                url: `/api/tasks/${taskId}`,
+                url: `http://localhost:8888/tasks/${taskId}`,
                 type: 'DELETE',
                 success: function () {
                     window.location.href = 'index.html'; // Redirect to the task list page after deleting the task

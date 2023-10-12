@@ -1,10 +1,11 @@
 function addTask() {
+    alert("Adding task")
     const taskName = $('#task-name').val();
     const taskDescription = $('#task-description').val();
     const taskCode = $('#task-code').val();
 
     if (taskName.trim() !== '') {
-        $.post('/api/tasks', {
+        $.post('http://localhost:8888/tasks/', {
             taskName: taskName,
             taskDescription: taskDescription,
             taskCode: taskCode,
