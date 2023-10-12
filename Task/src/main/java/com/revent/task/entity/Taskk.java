@@ -20,8 +20,11 @@ public class Taskk {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
     private String taskName;
+    
     private String taskDescription;
+    
     private String taskCode;
 }
 

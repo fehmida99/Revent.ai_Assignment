@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revent.task.entity.Taskk;
+import com.revent.task.exception.TaskkException;
 import com.revent.task.repository.TaskRepository;
 
 @Service
@@ -18,28 +19,29 @@ public class TaskServiceImpl implements TaskService {
 	 private TaskRepository taskRepository;
 
 	@Override
-	public Taskk saveTask(Taskk task) {
-		// TODO Auto-generated method stub
+	public Taskk saveTask(Taskk task) throws TaskkException{
+		if(taskRepository.existsById(task.getId())) {
+			throw new TaskkException("Task already present by this id " + task.getId());
+		}
 		return taskRepository.save(task);
+		
+	}
+	
+	
+	@Override
+	public List<Taskk> fetchTaskList() throws TaskkException{
+		  List<Taskk> newlist = (List<Taskk>) taskRepository.findAll();
+		  if(newlist.isEmpty()) {
+				throw new TaskkException("Task is Empty!!!");
+
+		  }
+		  return newlist;
 	}
 
 	
 	
-	
-	
 	@Override
-	public List<Taskk> fetchTaskList() {
-		// TODO Auto-generated method stub
-		  return (List<Taskk>)taskRepository.findAll();
-	}
-
-	
-	
-	
-	
-	
-	@Override
-	public Taskk updateTask(Taskk task, Long taskId) {
+	public Taskk updateTask(Taskk task, Long taskId) throws TaskkException{
 		
 		 Optional<Taskk> existingTaskOptional = taskRepository.findById(taskId);  
 		 
@@ -62,7 +64,7 @@ public class TaskServiceImpl implements TaskService {
 		        
 		        return taskRepository.save(existingTask);
 		    } else {
-		        throw new EntityNotFoundException("Task not found with ID: " + taskId);
+		        throw new TaskkException("Task not found with ID: " + taskId);
 		    }
 	}
 	
@@ -70,10 +72,15 @@ public class TaskServiceImpl implements TaskService {
 	
 	
 	@Override
-	public void deleteTaskById(Long taskId) {
-		// TODO Auto-generated method stub
-        taskRepository.deleteById(taskId);
+	public void deleteTaskById(Long taskId) throws TaskkException {
+		Optional<Taskk> task = taskRepository.findById(taskId);
+		if(task.isPresent()) {
+			 taskRepository.deleteById(taskId);
 
+		}else {
+			throw new TaskkException("Task is not present by this id " + taskId);
+		}
+       
 	}
 
 	 
